@@ -1,19 +1,28 @@
 const User = require('../models/user');
-const IncorrectData = require('../errors/IncorrectData');
-const NotFound = require('../errors/NotFound');
+const {
+  INCORRECT_ERROR,
+  NOT_FOUND_ERROR,
+  RES_CREATE_OK,
+  RES_OK,
+} = require('../utils/res-constants');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.satus(200).send({ data: users }))
-    .catch((err) => next(err));
+    .then((users) => res.status(RES_OK).send(users))
+    .catch(() => next(new Error('На сервере произошла ошибка')));
 };
 
 module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => {
+      if (user === null) {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден.' });
+      }
+      res.status(RES_OK).send(user);
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new NotFound('Пользователь по указанному _id не найден.'));
+        next(res.status(INCORRECT_ERROR).send({ message: 'Неверный формат данных в запросе' }));
       } else {
         next(err);
       }
@@ -21,13 +30,10 @@ module.exports.getUserId = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  User.create({
-    name: req.body.name,
-    about: req.body.about,
-    avatar: req.body.avatar,
-  })
+  const { name, about, avatar } = req.body;
+  User.create({ name, about, avatar })
     .then((user) => {
-      res.status(201).send({
+      res.status(RES_CREATE_OK).send({
         name: user.name,
         about: user.about,
         avatar: user.avatar,
@@ -35,7 +41,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new IncorrectData('Переданы некорректные данные при создании пользователя.'));
+        next(res.status(INCORRECT_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя.' }));
       } else {
         next(err);
       }
@@ -43,23 +49,24 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.updateProfile = (req, res, next) => {
+  const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
     {
-      name: req.body.name,
-      about: req.body.about,
+      name,
+      about,
     },
-    { new: true },
+    { new: true, runValidators: true },
   )
     .then((user) => {
-      if (!user) {
-        throw new IncorrectData('Переданы некорректные данные при обновлении профиля.');
+      if (user === null) {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь с указанным _id не найден.' });
       }
-      return res.status(200).send({ name: user.name, about: user.about });
+      res.status(RES_OK).send({ name: user.name, about: user.about });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new NotFound('Пользователь с указанным _id не найден.'));
+      if (err.name === 'ValidationError') {
+        next(res.status(INCORRECT_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля.' }));
       } else {
         next(err);
       }
@@ -67,20 +74,21 @@ module.exports.updateProfile = (req, res, next) => {
 };
 
 module.exports.updateAvatar = (req, res, next) => {
+  const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
-    { avatar: req.body.avatar },
-    { new: true },
+    { avatar },
+    { new: true, runValidators: true },
   )
     .then((user) => {
-      if (!user) {
-        throw new IncorrectData('Переданы некорректные данные при обновлении аватара.');
+      if (user === null) {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь с указанным _id не найден.' });
       }
-      return res.status(200).send({ avatar: user.avatar });
+      return res.status(RES_OK).send({ avatar: user.avatar });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new NotFound('Пользователь с указанным _id не найден.'));
+      if (err.name === 'ValidationError') {
+        next(res.status(INCORRECT_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара.' }));
       } else {
         next(err);
       }

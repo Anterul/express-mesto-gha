@@ -1,0 +1,11 @@
+const INCORRECT_ERROR = 400;
+const NOT_FOUND_ERROR = 404;
+const RES_CREATE_OK = 201;
+const RES_OK = 200;
+
+module.exports = {
+  INCORRECT_ERROR,
+  NOT_FOUND_ERROR,
+  RES_CREATE_OK,
+  RES_OK,
+};
