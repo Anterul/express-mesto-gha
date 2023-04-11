@@ -1,4 +1,4 @@
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const routes = require('express').Router();
 const auth = require('../middlewares/auth');
 const { login, createUser } = require('../controllers/users');
@@ -29,6 +29,8 @@ routes.use('/cards', require('./cards'));
 routes.all('*', (req, res, next) => {
   next(new AppError('Несуществующий маршрут.', 404));
 });
+
+routes.use(errors());
 
 routes.use((err, req, res, next) => {
   next(res.status(err.statusCode || 500).json({ status: err.status, message: err.message }));

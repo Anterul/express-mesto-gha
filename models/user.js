@@ -6,14 +6,15 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     default: 'Жак-Ив Кусто',
-    minlength: 2,
-    maxlength: 30,
+    minlength: [2, 'Имя пользователя должно состоять минимум из 2 символов'],
+    maxlength: [30, 'Имя пользователя должно состоять максимум из 30 символов'],
+    message: 'Имя пользователя должно состоять минимум из 2 символов',
   },
   about: {
     type: String,
     default: 'Исследователь',
-    minlength: 2,
-    maxlength: 30,
+    minlength: [2, 'Описание пользователя должно состоять минимум из 2 символов'],
+    maxlength: [30, 'Описание пользователя должно состоять максимум из 30 символов'],
   },
   avatar: {
     type: String,
@@ -36,6 +37,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
+    minlength: [4, 'Пароль должен состоять минимум из 4 символов'],
   },
 });
 
