@@ -1,25 +1,13 @@
-const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const routes = require('express').Router();
 const auth = require('../middlewares/auth');
 const { login, createUser } = require('../controllers/users');
 const AppError = require('../errors/AppError');
+const { validateUser } = require('../utils/validators');
 
-routes.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
-
-routes.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), createUser);
+routes.all('*', validateUser);
+routes.post('/signin', login);
+routes.post('/signup', createUser);
 
 routes.use(auth);
 
