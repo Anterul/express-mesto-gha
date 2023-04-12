@@ -75,6 +75,16 @@ module.exports.validateAvarar = celebrate({
   }),
 });
 
+module.exports.validateUserId = celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24)
+      .message('поле "id" должно состоять из 24 символов')
+      .messages({
+        'string.empty': 'поле "id" должно быть заполнено',
+      }),
+  }),
+});
+
 module.exports.validateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30)
@@ -91,9 +101,12 @@ module.exports.validateCard = celebrate({
   }),
 });
 
-module.exports.validateId = celebrate({
+module.exports.validateCardId = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24)
-      .message('поле "id" должно состоять из 24 символов'),
+      .message('поле "id" должно состоять из 24 символов')
+      .messages({
+        'string.empty': 'поле "id" должно быть заполнено',
+      }),
   }),
 });
