@@ -3,11 +3,10 @@ const routes = require('express').Router();
 const auth = require('../middlewares/auth');
 const { login, createUser } = require('../controllers/users');
 const AppError = require('../errors/AppError');
-const { validateUser } = require('../utils/validators');
+const { validateRegister, validateLogin } = require('../utils/validators');
 
-routes.all('*', validateUser);
-routes.post('/signin', login);
-routes.post('/signup', createUser);
+routes.post('/signin', validateLogin, login);
+routes.post('/signup', validateRegister, createUser);
 
 routes.use(auth);
 
