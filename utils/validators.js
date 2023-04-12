@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const { RegExUrl } = require('./regEx');
+const { REGEX_URL } = require('./regEx');
 
 module.exports.validateLogin = celebrate({
   body: Joi.object().keys({
@@ -8,9 +8,8 @@ module.exports.validateLogin = celebrate({
       .messages({
         'string.empty': 'поле "email" должно быть заполнено',
       }),
-    password: Joi.string().required().min(4)
+    password: Joi.string().required()
       .messages({
-        'string.min': 'минимальная длина поля "password" - 4',
         'string.empty': 'поле "password" должно быть заполнено',
       }),
   }),
@@ -30,7 +29,7 @@ module.exports.validateRegister = celebrate({
         'string.max': 'максимальная длина поля "about" - 30',
         'string.empty': 'поле "about" должно быть заполнено',
       }),
-    avatar: Joi.string().regex(RegExUrl)
+    avatar: Joi.string().regex(REGEX_URL)
       .message('поле "avatar" должно быть валидным url-адресом')
       .messages({
         'string.empty': 'поле "avatar" должно быть заполнено',
@@ -40,9 +39,8 @@ module.exports.validateRegister = celebrate({
       .messages({
         'string.empty': 'поле "email" должно быть заполнено',
       }),
-    password: Joi.string().required().min(4)
+    password: Joi.string().required()
       .messages({
-        'string.min': 'минимальная длина поля "password" - 4',
         'string.empty': 'поле "password" должно быть заполнено',
       }),
   }),
@@ -67,7 +65,7 @@ module.exports.validateProfile = celebrate({
 
 module.exports.validateAvarar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().regex(RegExUrl)
+    avatar: Joi.string().required().regex(REGEX_URL)
       .message('поле "avatar" должно быть валидным url-адресом')
       .messages({
         'string.empty': 'поле "avatar" должно быть заполнено',
@@ -77,10 +75,10 @@ module.exports.validateAvarar = celebrate({
 
 module.exports.validateUserId = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24)
-      .message('поле "id" должно состоять из 24 символов')
+    userId: Joi.string().hex().length(24).required()
       .messages({
         'string.empty': 'поле "id" должно быть заполнено',
+        'any.only': 'поле "id" должно состоять из 24 символов',
       }),
   }),
 });
@@ -93,7 +91,7 @@ module.exports.validateCard = celebrate({
         'string.max': 'максимальная длина поля "name" - 30',
         'string.empty': 'поле "name" должно быть заполнено',
       }),
-    link: Joi.string().required().regex(RegExUrl)
+    link: Joi.string().required().regex(REGEX_URL)
       .message('поле "link" должно быть валидным url-адресом')
       .messages({
         'string.empty': 'поле "link" должно быть заполнено',
@@ -103,10 +101,10 @@ module.exports.validateCard = celebrate({
 
 module.exports.validateCardId = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().length(24)
-      .message('поле "id" должно состоять из 24 символов')
+    cardId: Joi.string().hex().length(24)
       .messages({
         'string.empty': 'поле "id" должно быть заполнено',
+        'any.only': 'поле "id" должно состоять из 24 символов',
       }),
   }),
 });
