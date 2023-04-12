@@ -90,3 +90,13 @@ module.exports.validateCard = celebrate({
       }),
   }),
 });
+
+module.exports.validateId = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().length(24)
+      .message('поле "id" должно состоять из 24 символов')
+      .messages({
+        'string.empty': 'поле "id" должно быть заполнено',
+      }),
+  }),
+});
