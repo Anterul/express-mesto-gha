@@ -4,9 +4,9 @@ const { REGEX_URL } = require('./regEx');
 module.exports.validateLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required()
-      .message('поле "email" должно быть валидным адресом электронной почты')
       .messages({
         'string.empty': 'поле "email" должно быть заполнено',
+        'any.only': 'поле "email" должно быть валидным адресом электронной почты',
       }),
     password: Joi.string().required()
       .messages({
@@ -30,14 +30,14 @@ module.exports.validateRegister = celebrate({
         'string.empty': 'поле "about" должно быть заполнено',
       }),
     avatar: Joi.string().regex(REGEX_URL)
-      .message('поле "avatar" должно быть валидным url-адресом')
       .messages({
         'string.empty': 'поле "avatar" должно быть заполнено',
+        'any.only': 'поле "avatar" должно быть валидным url-адресом',
       }),
     email: Joi.string().email().required()
-      .message('поле "email" должно быть валидным адресом электронной почты')
       .messages({
         'string.empty': 'поле "email" должно быть заполнено',
+        'any.only': 'поле "email" должно быть валидным адресом электронной почты',
       }),
     password: Joi.string().required()
       .messages({
@@ -66,9 +66,9 @@ module.exports.validateProfile = celebrate({
 module.exports.validateAvarar = celebrate({
   body: Joi.object().keys({
     avatar: Joi.string().regex(REGEX_URL).required()
-      .message('поле "avatar" должно быть валидным url-адресом')
       .messages({
         'string.empty': 'поле "avatar" должно быть заполнено',
+        'any.only': 'поле "avatar" должно быть валидным url-адресом',
       }),
   }),
 });
@@ -92,9 +92,9 @@ module.exports.validateCard = celebrate({
         'string.empty': 'поле "name" должно быть заполнено',
       }),
     link: Joi.string().regex(REGEX_URL).required()
-      .message('поле "link" должно быть валидным url-адресом')
       .messages({
         'string.empty': 'поле "link" должно быть заполнено',
+        'any.only': 'поле "link" должно быть валидным url-адресом',
       }),
   }),
 });
