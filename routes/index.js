@@ -11,7 +11,7 @@ const { requestLogger, errorLogger } = require('../middlewares/logger');
 routes.use(requestLogger);
 
 routes.use(cors({
-  origin: ['http://localhost:3000'],
+  origin: ['https://fmesto.nomoredomains.monster'],
 }));
 
 routes.get('/crash-test', () => {
