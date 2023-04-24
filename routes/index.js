@@ -1,5 +1,6 @@
 const { errors } = require('celebrate');
 const routes = require('express').Router();
+const cors = require('cors');
 const auth = require('../middlewares/auth');
 const { login, createUser } = require('../controllers/users');
 const { validateRegister, validateLogin } = require('../utils/validators');
@@ -8,6 +9,10 @@ const NotFound = require('../utils/errors/NotFound');
 const { requestLogger, errorLogger } = require('../middlewares/logger');
 
 routes.use(requestLogger);
+
+routes.use(cors({
+  origin: ['http://localhost:3000'],
+}));
 
 routes.get('/crash-test', () => {
   setTimeout(() => {
