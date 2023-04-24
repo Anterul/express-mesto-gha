@@ -10,9 +10,7 @@ const { requestLogger, errorLogger } = require('../middlewares/logger');
 
 routes.use(requestLogger);
 
-routes.use(cors({
-  origin: ['https://fmesto.nomoredomains.monster'],
-}));
+routes.use('*', cors());
 
 routes.get('/crash-test', () => {
   setTimeout(() => {
