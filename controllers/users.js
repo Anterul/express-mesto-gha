@@ -49,7 +49,7 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => {
       const userObject = user.toObject();
       delete userObject.password;
-      res.send({ user });
+      res.send({ userObject });
     })
     .catch((err) => {
       if (err.code === 11000) {
